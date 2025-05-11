@@ -21,7 +21,7 @@ This project implements a remote control system using ESP32-WROOM-32 microcontro
 ## Software Requirements
 - PlatformIO IDE
 - ESP32 Arduino framework
-- Required libraries:
+- *Required libraries*:
  -ESP32Servo
  -PS4-esp32
 
