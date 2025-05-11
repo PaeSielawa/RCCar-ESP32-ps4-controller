@@ -61,12 +61,12 @@ monitor_speed = 115200
 ## Usage
 1. Upload the code to ESP32-CAM
 2. Pair PS4 controller:
-  - Hold SHARE button
-  - While holding SHARE, press PS button
-  - Wait for rapid light bar flashing
+    - Hold SHARE button
+    - While holding SHARE, press PS button
+    - Wait for rapid light bar flashing
 3. Check serial monitor for IP address
-  - Left stick X-axis: Servo control (45° - 135°)
-  - Center: 90° position
+    - Left stick X-axis: Servo control (45° - 135°)
+    - Center: 90° position
 
 ## Control Parameters
 Default configuration:
