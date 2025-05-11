@@ -9,18 +9,21 @@ This project implements a remote control system using ESP32-WROOM-32 microcontro
 - Configurable control parameters
 - Debug output via Serial
 - Easy pairing process
-Hardware Requirements
-ESP32-WROOM-32 development board
-PS4 controller
-Servo motor
-USB cable for programming
-5V power supply
-Jumper wires
-Software Requirements
-PlatformIO IDE
-ESP32 Arduino framework
-Required libraries:
-ESP32Servo
-PS4-esp32
-Installation
-Clone the repository
+
+## Hardware Requirements
+- ESP32-WROOM-32 development board
+- PS4 controller
+- Servo motor
+- USB cable for programming
+- 5V power supply
+- Jumper wires
+
+## Software Requirements
+- PlatformIO IDE
+- ESP32 Arduino framework
+- Required libraries:
+ -ESP32Servo
+ -PS4-esp32
+
+## Installation
+1. Clone the repository
