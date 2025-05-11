@@ -39,7 +39,7 @@ git clone https://github.com/PaeSielawa/RCCar-ESP32Cam.git
 
 ## Wiring
 Connect components to ESP32-WROOM-32:
-|    Component    |   ESP32 Pin    |
+|   Component     |   ESP32 Pin    |
 |-----------------|----------------|
 | Servo Signal    | GPIO22         |
 | Motor Control   | GPIO23         |
@@ -74,3 +74,24 @@ Default configuration:
 - Center position: 90°
 - Motor speed range: 0-255
 - Debug level: 5 (detailed)
+
+## Troubleshooting
+- **Controller won't pair**: Reset controller using reset button
+- **Upload fails**: Check COM port and USB connection
+- **Servo not responding**: Verify pin connections and power
+- **Connection issues**: Ensure proper power supply
+
+## Contributing
+1. Fork the repository
+2. Create feature branch (git checkout -b feature/YourFeature)
+3. Commit changes (git commit -m 'Add some feature')
+4. Push to branch (git push origin feature/YourFeature)
+5. Open Pull Request
+
+## Acknowledgments
+- ESP32Servo library developers
+- PS4-esp32 library developers
+- PlatformIO development platform
+  
+## License
+This project was created by PS. All rights reserved.
