@@ -28,7 +28,7 @@ This project implements a remote control system using ESP32-WROOM-32 microcontro
 ## Installation
 1. Clone the repository
 ```bash
-git clone https://github.com/PaeSielawa/RCCar-ESP32Cam.git
+git clone https://github.com/PaeSielawa/RCCar-ESP32-ps4-controller.git
 ```
 2. Open project in PlatformIO
 3. Configure pins in `config.h`:
@@ -83,9 +83,9 @@ Default configuration:
 
 ## Contributing
 1. Fork the repository
-2. Create feature branch (git checkout -b feature/YourFeature)
-3. Commit changes (git commit -m 'Add some feature')
-4. Push to branch (git push origin feature/YourFeature)
+2. Create feature branch (`git checkout -b feature/YourFeature`)
+3. Commit changes (`git commit -m 'Add some feature'`)
+4. Push to branch (`git push origin feature/YourFeature`)
 5. Open Pull Request
 
 ## Acknowledgments
