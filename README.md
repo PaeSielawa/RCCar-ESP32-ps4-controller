@@ -1,50 +1,96 @@
-# README.md
+# ESP32-CAM Streaming Server Project
 
-# ESP32 PS4 Controller Project
+## Description
+This project implements a video streaming server using the ESP32-CAM module. It provides real-time camera feed access through a web interface, making it suitable for surveillance, monitoring, or remote viewing applications.
 
-This project allows you to control an ESP32 using a PS4 controller. It provides functionalities to connect to the controller, read input data, and handle button presses.
+## Features
+- Real-time video streaming over WiFi
+- Web interface for easy access
+- Automatic WiFi connection
+- Configurable camera settings
+- Low-latency image transmission
 
-## Project Structure
+## Hardware Requirements
+- ESP32-CAM (AI-Thinker) module
+- USB-UART programmer (FTDI, CP2102, or similar)
+- 5V power supply
+- Female-to-female jumper wires
 
+## Software Requirements
+- PlatformIO IDE
+- ESP32 Arduino framework
+- ESP32 board support package
+- Required libraries:
+  - WebServer
+  - WiFi
+  - ESP32Camera
+
+## Installation
+1. Clone the repository
+```bash
+git clone https://github.com/PaeSielawa/RCCar-ESP32Cam.git
 ```
-esp32-ps4-controller
-├── src
-│   ├── main.cpp            # Entry point of the application
-│   ├── ps4_controller.cpp   # Implementation of PS4 controller functionalities
-│   ├── ps4_controller.h     # Header file for PS4Controller class
-│   └── config.h            # Configuration settings
-├── platformio.ini          # PlatformIO configuration file
-├── lib
-│   └── README.md           # Documentation for libraries used
-└── README.md               # Project documentation
+
+2. Open project in PlatformIO
+3. Configure WiFi credentials in `src/main.cpp`:
+```cpp
+const char* ssid = "YourWiFiNetwork";
+const char* password = "YourWiFiPassword";
 ```
 
-## Setup Instructions
+## Wiring
+For programming, connect the USB-UART programmer to ESP32-CAM:
+| ESP32-CAM | UART Programmer |
+|-----------|----------------|
+| GND       | GND           |
+| 5V        | 5V            |
+| U0R       | TX            |
+| U0T       | RX            |
+| GPIO0     | GND (only when flashing) |
 
-1. Clone the repository:
-   ```
-   git clone <repository-url>
-   ```
+## Project Configuration
+Project settings in `platformio.ini`:
+```ini
+[env:esp32cam]
+platform = espressif32
+board = esp32cam
+framework = arduino
+monitor_speed = 115200
+board_build.flash_mode = qio
+board_build.partitions = huge_app.csv
+board_build.f_cpu = 240000000L
+```
 
-2. Navigate to the project directory:
-   ```
-   cd esp32-ps4-controller
-   ```
+## Usage
+1. Upload the code to ESP32-CAM
+2. Power cycle the device
+3. Check serial monitor for IP address
+4. Open web browser and navigate to: `http://<ESP32-IP-Address>`
 
-3. Open the project in your preferred IDE.
+## Camera Settings
+Default camera configuration:
+- Resolution: 800x600 (SVGA)
+- Quality: 10 (range: 0-63)
+- Frame Size: Optimized for streaming
+- Frame Buffer Count: 2
 
-4. Install the required libraries specified in `platformio.ini`.
+## Troubleshooting
+- **Camera initialization failed**: Check camera module connection
+- **WiFi connection issues**: Verify credentials and signal strength
+- **Streaming problems**: Ensure stable power supply
+- **Upload fails**: Make sure GPIO0 is connected to GND during flashing
 
-5. Connect your ESP32 board to your computer.
+## Contributing
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-6. Upload the code to the ESP32 using PlatformIO.
-
-## Usage Guidelines
-
-- Ensure your PS4 controller is in pairing mode.
-- The ESP32 will attempt to connect to the controller upon startup.
-- Use the defined methods in the `PS4Controller` class to interact with the controller.
-
+## Acknowledgments
+- ESP32-CAM module by AI-Thinker
+- Arduino ESP32 framework
+- PlatformIO development platform
+  
 ## License
-
-This project is licensed under the MIT License. See the LICENSE file for more details.
+This project was created by PS. All rights reserved.
