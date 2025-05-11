@@ -1,96 +1,67 @@
-# ESP32-CAM Streaming Server Project
+ESP32 PS4 Controller Project
+This project implements a remote control system using ESP32-WROOM-32 microcontroller and PS4 controller for servo motor control.
 
-## Description
-This project implements a video streaming server using the ESP32-CAM module. It provides real-time camera feed access through a web interface, making it suitable for surveillance, monitoring, or remote viewing applications.
+Hardware Requirements
+ESP32-WROOM-32 development board
+PS4 controller
+Servo motor
+USB cable for programming
+Power supply for ESP32
+Pin Configuration
+Servo control: GPIO22
+Motor control: GPIO23
+Software Requirements
+PlatformIO IDE
+Required libraries:
+ESP32Servo
+PS4-esp32
+Installation
+Clone this repository:
+Open the project in PlatformIO IDE
 
-## Features
-- Real-time video streaming over WiFi
-- Web interface for easy access
-- Automatic WiFi connection
-- Configurable camera settings
-- Low-latency image transmission
+Install dependencies:
 
-## Hardware Requirements
-- ESP32-CAM (AI-Thinker) module
-- USB-UART programmer (FTDI, CP2102, or similar)
-- 5V power supply
-- Female-to-female jumper wires
+The required libraries will be automatically installed through PlatformIO
+Configuration
+Hardware Setup
+Connect servo to GPIO22
+Connect ESP32 to your computer via USB
+Make sure to use the correct USB port (COM3 by default)
+Software Setup
+Update platformio.ini if needed
+Compile and upload the code
+Open Serial Monitor to view debug information
+Usage
+Power up the ESP32
 
-## Software Requirements
-- PlatformIO IDE
-- ESP32 Arduino framework
-- ESP32 board support package
-- Required libraries:
-  - WebServer
-  - WiFi
-  - ESP32Camera
+Pair the PS4 controller:
 
-## Installation
-1. Clone the repository
-```bash
-git clone https://github.com/PaeSielawa/RCCar-ESP32Cam.git
-```
+Press and hold SHARE button
+While holding SHARE, press and hold PS button
+Wait for the light bar to start blinking rapidly
+Release both buttons
+Controls:
 
-2. Open project in PlatformIO
-3. Configure WiFi credentials in `src/main.cpp`:
-```cpp
-const char* ssid = "YourWiFiNetwork";
-const char* password = "YourWiFiPassword";
-```
+Left stick X-axis: Servo control
+Center position: 90°
+Left maximum: 45°
+Right maximum: 135°
+Deadzone implemented for stability
+Debugging
+Serial output provides debugging information:
+Stick position
+Servo angle
+Deadzone status
+Baud rate: 115200
+Project Structure
+License
+This project is open-source and available under the MIT License.
 
-## Wiring
-For programming, connect the USB-UART programmer to ESP32-CAM:
-| ESP32-CAM | UART Programmer |
-|-----------|----------------|
-| GND       | GND           |
-| 5V        | 5V            |
-| U0R       | TX            |
-| U0T       | RX            |
-| GPIO0     | GND (only when flashing) |
+Contributing
+Feel free to submit issues and pull requests.
 
-## Project Configuration
-Project settings in `platformio.ini`:
-```ini
-[env:esp32cam]
-platform = espressif32
-board = esp32cam
-framework = arduino
-monitor_speed = 115200
-board_build.flash_mode = qio
-board_build.partitions = huge_app.csv
-board_build.f_cpu = 240000000L
-```
-
-## Usage
-1. Upload the code to ESP32-CAM
-2. Power cycle the device
-3. Check serial monitor for IP address
-4. Open web browser and navigate to: `http://<ESP32-IP-Address>`
-
-## Camera Settings
-Default camera configuration:
-- Resolution: 800x600 (SVGA)
-- Quality: 10 (range: 0-63)
-- Frame Size: Optimized for streaming
-- Frame Buffer Count: 2
-
-## Troubleshooting
-- **Camera initialization failed**: Check camera module connection
-- **WiFi connection issues**: Verify credentials and signal strength
-- **Streaming problems**: Ensure stable power supply
-- **Upload fails**: Make sure GPIO0 is connected to GND during flashing
-
-## Contributing
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-## Acknowledgments
-- ESP32-CAM module by AI-Thinker
-- Arduino ESP32 framework
-- PlatformIO development platform
-  
-## License
-This project was created by PS. All rights reserved.
+Authors
+Your Name
+Acknowledgments
+Thanks to the ESP32Servo library developers
+Thanks to the PS4-esp32 library developers
