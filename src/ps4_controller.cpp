@@ -22,8 +22,13 @@ void CarController::setupPins() {
 }
 
 void CarController::connect() {
-    PS4.begin(BLUETOOTH_NAME);
-    connected = true;
+    if (PS4.begin(BLUETOOTH_NAME)) {
+        connected = true;
+        Serial.println("PS4 Controller connected successfully");
+    } else {
+        connected = false;
+        Serial.println("Failed to connect PS4 controller");
+    }
 }
 
 void CarController::controlMotor(int angle) {
