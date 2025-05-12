@@ -19,6 +19,12 @@
 #define SERVO_MAX_ANGLE 135  // Maksymalny skręt w prawo
 #define SERVO_DEADZONE 10    // Strefa martwa dla drążka
 
+// Motor servo parameters (temporary for testing)
+#define MOTOR_CENTER 90     // Pozycja neutralna
+#define MOTOR_MAX_FWD 135   // Maksymalne wychylenie do przodu
+#define MOTOR_MAX_REV 45    // Maksymalne wychylenie do tyłu
+#define MOTOR_RETURN_SPEED 2 // Prędkość powrotu do pozycji neutralnej
+
 // Other configuration constants
 #define MAX_CONNECTION_ATTEMPTS 5
 #define CONNECTION_TIMEOUT 10000 // in milliseconds

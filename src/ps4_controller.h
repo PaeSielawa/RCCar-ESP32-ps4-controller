@@ -16,8 +16,11 @@ public:
 private:
     bool connected;
     Servo steeringServo;
+    Servo motorServo;      // Drugie serwo symulujące silnik
+    int currentMotorAngle; // Aktualna pozycja serwa silnika
     void controlMotor(int speed);
     void controlSteering(int angle);
+    void updateMotor();    // Nowa metoda do aktualizacji pozycji silnika
 };
 
 #endif // PS4_CONTROLLER_H

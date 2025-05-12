@@ -3,13 +3,22 @@
 
 CarController::CarController() {
     connected = false;
+    currentMotorAngle = MOTOR_CENTER;
 }
 
 void CarController::setupPins() {
     ESP32PWM::allocateTimer(0); // Alokuj timer dla serwa
+    ESP32PWM::allocateTimer(1);
+    
+    // Konfiguracja serwa kierownicy
     steeringServo.setPeriodHertz(50); // Standardowa częstotliwość dla serwa
     steeringServo.attach(SERVO_PIN, 500, 2400); // Min i max pulsy dla typowego serwa
     steeringServo.write(SERVO_CENTER); // Centruj serwo na start
+    
+    // Konfiguracja serwa silnika
+    motorServo.setPeriodHertz(50);
+    motorServo.attach(MOTOR_PIN, 500, 2400);
+    motorServo.write(MOTOR_CENTER);
 }
 
 void CarController::connect() {
@@ -17,9 +26,10 @@ void CarController::connect() {
     connected = true;
 }
 
-void CarController::controlMotor(int speed) {
-    speed = constrain(speed, MOTOR_MIN_SPEED, MOTOR_MAX_SPEED);
-    analogWrite(MOTOR_PIN, speed);
+void CarController::controlMotor(int angle) {
+    angle = constrain(angle, MOTOR_MAX_REV, MOTOR_MAX_FWD);
+    currentMotorAngle = angle;
+    motorServo.write(angle);
 }
 
 void CarController::controlSteering(int angle) {
@@ -29,26 +39,42 @@ void CarController::controlSteering(int angle) {
 
 void CarController::readInput() {
     if (PS4.isConnected()) {
+        // Obsługa kierownicy
         // Odczyt pozycji lewego drążka w osi X
         int leftStickX = PS4.LStickX();
-        
         // Mapowanie wartości z zakresu drążka (-128 do 127) na kąt serwa
         int steeringAngle = map(leftStickX, -128, 127, SERVO_MIN_ANGLE, SERVO_MAX_ANGLE);
-        
         // Dodanie małej strefy martwej wokół środka (deadzone)
         if (abs(leftStickX) < SERVO_DEADZONE) {
             steeringAngle = SERVO_CENTER;
         }
-        
         // Zastosowanie kąta skrętu
         controlSteering(steeringAngle);
+
+        // Obsługa silnika
+        int motorPower = 0;
+        if (PS4.R2()) {
+            // Do przodu - mapowanie wartości R2 (0-255) na kąt serwa
+            motorPower = map(PS4.R2Value(), 0, 255, MOTOR_CENTER, MOTOR_MAX_FWD);
+        } else if (PS4.L2()) {
+            // Do tyłu - mapowanie wartości L2 (0-255) na kąt serwa
+            motorPower = map(PS4.L2Value(), 0, 255, MOTOR_CENTER, MOTOR_MAX_REV);
+        } else {
+            // Powolny powrót do pozycji neutralnej
+            if (currentMotorAngle > MOTOR_CENTER) {
+                motorPower = currentMotorAngle - MOTOR_RETURN_SPEED;
+            } else if (currentMotorAngle < MOTOR_CENTER) {
+                motorPower = currentMotorAngle + MOTOR_RETURN_SPEED;
+            } else {
+                motorPower = MOTOR_CENTER;
+            }
+        }
         
-        // Szczegółowe debugowanie
-        Serial.printf("Stick X: %d | Angle: %d | Deadzone: %s\n", 
-            leftStickX, 
-            steeringAngle, 
-            (abs(leftStickX) < SERVO_DEADZONE) ? "Active" : "Inactive"
-        );
+        controlMotor(motorPower);
+        
+        // Debug info
+        Serial.printf("Stick X: %d | Steering: %d | Motor: %d | R2: %d | L2: %d\n",
+            leftStickX, steeringAngle, motorPower, PS4.R2Value(), PS4.L2Value());
     } else {
         Serial.println("Controller disconnected!");
     }
