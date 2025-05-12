@@ -29,4 +29,12 @@
 #define MAX_CONNECTION_ATTEMPTS 5
 #define CONNECTION_TIMEOUT 10000 // in milliseconds
 
+// Debug settings
+#define DEBUG_INTERVAL 100    // Interwał debugowania (ms)
+#define LOOP_DELAY 20        // Opóźnienie głównej pętli (ms)
+
+// Motor control parameters
+#define MOTOR_ACCELERATION 5  // Przyspieszenie silnika
+#define MOTOR_DECELERATION 3  // Opóźnienie silnika
+
 #endif // CONFIG_H

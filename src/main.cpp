@@ -12,8 +12,13 @@ void setup() {
 }
 
 void loop() {
-    if (car.isConnected()) {
-        car.readInput();
+    static unsigned long lastLoopTime = 0;
+    unsigned long currentTime = millis();
+    
+    if (currentTime - lastLoopTime >= LOOP_DELAY) {
+        if (car.isConnected()) {
+            car.readInput();
+        }
+        lastLoopTime = currentTime;
     }
-    delay(20); // Small delay for stability
 }

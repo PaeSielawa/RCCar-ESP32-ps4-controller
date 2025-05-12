@@ -15,6 +15,10 @@ public:
 
 private:
     bool connected;
+    bool steeringServoInitialized;
+    bool motorServoInitialized;
+    unsigned long lastDebugTime;
+    const unsigned long DEBUG_INTERVAL = 100; // ms między debugowaniem
     Servo steeringServo;
     Servo motorServo;      // Drugie serwo symulujące silnik
     int currentMotorAngle; // Aktualna pozycja serwa silnika
