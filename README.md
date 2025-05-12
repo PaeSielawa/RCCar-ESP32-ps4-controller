@@ -1,50 +1,97 @@
-# README.md
-
 # ESP32 PS4 Controller Project
 
-This project allows you to control an ESP32 using a PS4 controller. It provides functionalities to connect to the controller, read input data, and handle button presses.
+## Description
+This project implements a remote control system using ESP32-WROOM-32 microcontroller and PS4 controller. It enables precise servo motor control through wireless communication, making it suitable for robotics and RC applications.
 
-## Project Structure
+## Features
+- Wireless control using PS4 controller
+- Precise servo motor control
+- Configurable control parameters
+- Debug output via Serial
+- Easy pairing process
 
+## Hardware Requirements
+- ESP32-WROOM-32 development board
+- PS4 controller
+- Servo motor
+- USB cable for programming
+- 5V power supply
+- Jumper wires
+
+## Software Requirements
+- PlatformIO IDE
+- ESP32 Arduino framework
+- Required libraries:
+  - ESP32Servo
+  - PS4-esp32
+
+## Installation
+1. Clone the repository
+```bash
+git clone https://github.com/PaeSielawa/RCCar-ESP32-ps4-controller.git
 ```
-esp32-ps4-controller
-├── src
-│   ├── main.cpp            # Entry point of the application
-│   ├── ps4_controller.cpp   # Implementation of PS4 controller functionalities
-│   ├── ps4_controller.h     # Header file for PS4Controller class
-│   └── config.h            # Configuration settings
-├── platformio.ini          # PlatformIO configuration file
-├── lib
-│   └── README.md           # Documentation for libraries used
-└── README.md               # Project documentation
+2. Open project in PlatformIO
+3. Configure pins in `config.h`:
+```cpp
+#define MOTOR_PIN 23  // Pin for motor control
+#define SERVO_PIN 22  // Pin for servo control
 ```
 
-## Setup Instructions
+## Wiring
+Connect components to ESP32-WROOM-32:
+|   Component     |   ESP32 Pin    |
+|-----------------|----------------|
+| Servo Signal    | GPIO22         |
+| Motor Control   | GPIO23         |
+| Power (5V)      | VIN            |
+| Ground          | GND            |
 
-1. Clone the repository:
-   ```
-   git clone <repository-url>
-   ```
+## Project Configuration
+Project settings in `platformio.ini`:
+```ini
+[env:esp32dev]
+platform = espressif32
+board = esp32dev
+framework = arduino
+upload_port = COM3
+upload_speed = 57600
+monitor_speed = 115200
+```
 
-2. Navigate to the project directory:
-   ```
-   cd esp32-ps4-controller
-   ```
+## Usage
+1. Upload the code to ESP32-CAM
+2. Pair PS4 controller:
+    - Hold SHARE button
+    - While holding SHARE, press PS button
+    - Wait for rapid light bar flashing
+3. Check serial monitor for IP address
+    - Left stick X-axis: Servo control (45° - 135°)
+    - Center: 90° position
 
-3. Open the project in your preferred IDE.
+## Control Parameters
+Default configuration:
+- Servo range: 45° - 135°
+- Center position: 90°
+- Motor speed range: 0-255
+- Debug level: 5 (detailed)
 
-4. Install the required libraries specified in `platformio.ini`.
+## Troubleshooting
+- **Controller won't pair**: Reset controller using reset button
+- **Upload fails**: Check COM port and USB connection
+- **Servo not responding**: Verify pin connections and power
+- **Connection issues**: Ensure proper power supply
 
-5. Connect your ESP32 board to your computer.
+## Contributing
+1. Fork the repository
+2. Create feature branch (`git checkout -b feature/YourFeature`)
+3. Commit changes (`git commit -m 'Add some feature'`)
+4. Push to branch (`git push origin feature/YourFeature`)
+5. Open Pull Request
 
-6. Upload the code to the ESP32 using PlatformIO.
-
-## Usage Guidelines
-
-- Ensure your PS4 controller is in pairing mode.
-- The ESP32 will attempt to connect to the controller upon startup.
-- Use the defined methods in the `PS4Controller` class to interact with the controller.
-
+## Acknowledgments
+- ESP32Servo library developers
+- PS4-esp32 library developers
+- PlatformIO development platform
+  
 ## License
-
-This project is licensed under the MIT License. See the LICENSE file for more details.
+This project was created by PS. All rights reserved.
