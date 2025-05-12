@@ -3,22 +3,37 @@
 
 CarController::CarController() {
     connected = false;
+    steeringServoInitialized = false;
+    motorServoInitialized = false;
     currentMotorAngle = MOTOR_CENTER;
+    lastDebugTime = 0;
 }
 
 void CarController::setupPins() {
     ESP32PWM::allocateTimer(0); // Alokuj timer dla serwa
     ESP32PWM::allocateTimer(1);
     
-    // Konfiguracja serwa kierownicy
+    // Inicjalizacja serwa kierownicy
     steeringServo.setPeriodHertz(50); // Standardowa częstotliwość dla serwa
-    steeringServo.attach(SERVO_PIN, 500, 2400); // Min i max pulsy dla typowego serwa
-    steeringServo.write(SERVO_CENTER); // Centruj serwo na start
+    if (steeringServo.attach(SERVO_PIN, 500, 2400)) { // Min i max pulsy dla typowego serwa
+        steeringServoInitialized = true;
+        steeringServo.write(SERVO_CENTER); // Centruj serwo na start
+        Serial.println("Steering servo initialized");
+    } else {
+        Serial.println("Failed to initialize steering servo");
+        return;
+    }
     
-    // Konfiguracja serwa silnika
+    // Inicjalizacja serwa silnika
     motorServo.setPeriodHertz(50);
-    motorServo.attach(MOTOR_PIN, 500, 2400);
-    motorServo.write(MOTOR_CENTER);
+    if (motorServo.attach(MOTOR_PIN, 500, 2400)) {
+        motorServoInitialized = true;
+        motorServo.write(MOTOR_CENTER);
+        Serial.println("Motor servo initialized");
+    } else {
+        Serial.println("Failed to initialize motor servo");
+        return;
+    }
 }
 
 void CarController::connect() {
@@ -43,6 +58,11 @@ void CarController::controlSteering(int angle) {
 }
 
 void CarController::readInput() {
+    if (!steeringServoInitialized || !motorServoInitialized) {
+        Serial.println("Servos not initialized!");
+        return;
+    }
+
     if (PS4.isConnected()) {
         // Obsługa kierownicy
         // Odczyt pozycji lewego drążka w osi X
@@ -77,9 +97,13 @@ void CarController::readInput() {
         
         controlMotor(motorPower);
         
-        // Debug info
-        Serial.printf("Stick X: %d | Steering: %d | Motor: %d | R2: %d | L2: %d\n",
-            leftStickX, steeringAngle, motorPower, PS4.R2Value(), PS4.L2Value());
+        // Debugowanie z limitem czasowym
+        unsigned long currentTime = millis();
+        if (currentTime - lastDebugTime >= DEBUG_INTERVAL) {
+            Serial.printf("Stick X: %d | Steering: %d | Motor: %d | R2: %d | L2: %d\n",
+                leftStickX, steeringAngle, motorPower, PS4.R2Value(), PS4.L2Value());
+            lastDebugTime = currentTime;
+        }
     } else {
         Serial.println("Controller disconnected!");
     }
