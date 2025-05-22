@@ -1,10 +1,10 @@
-# ESP32 PS4 Controller Project
+# ESP32 PS5 Controller Project
 
 ## Description
-This project implements a remote control system using ESP32-WROOM-32 microcontroller and PS4 controller. It enables precise servo motor control through wireless communication, making it suitable for robotics and RC applications.
+This project implements a remote control system using ESP32-WROOM-32 microcontroller and PS5 controller. It enables precise servo motor control through wireless communication, making it suitable for robotics and RC applications.
 
 ## Features
-- Wireless control using PS4 controller
+- Wireless control using PS5 controller
 - Precise servo motor control
 - Configurable control parameters
 - Debug output via Serial
@@ -12,7 +12,7 @@ This project implements a remote control system using ESP32-WROOM-32 microcontro
 
 ## Hardware Requirements
 - ESP32-WROOM-32 development board
-- PS4 controller
+- PS5 controller
 - Servo motor
 - USB cable for programming
 - 5V power supply
@@ -23,12 +23,12 @@ This project implements a remote control system using ESP32-WROOM-32 microcontro
 - ESP32 Arduino framework
 - Required libraries:
   - ESP32Servo
-  - PS4-esp32
+  - ps5-esp32
 
 ## Installation
 1. Clone the repository
 ```bash
-git clone https://github.com/PaeSielawa/RCCar-ESP32-ps4-controller.git
+git clone https://github.com/PaeSielawa/RCCar-ESP32-ps5-controller.git
 ```
 2. Open project in PlatformIO
 3. Configure pins in `config.h`:
@@ -60,7 +60,7 @@ monitor_speed = 115200
 
 ## Usage
 1. Upload the code to ESP32-CAM
-2. Pair PS4 controller:
+2. Pair PS5 controller:
     - Hold SHARE button
     - While holding SHARE, press PS button
     - Wait for rapid light bar flashing
@@ -90,7 +90,7 @@ Default configuration:
 
 ## Acknowledgments
 - ESP32Servo library developers
-- PS4-esp32 library developers
+- ps5-esp32 library developers
 - PlatformIO development platform
   
 ## License
