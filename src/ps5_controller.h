@@ -9,7 +9,6 @@ class CarController {
 public:
     CarController();
     void setupPins();
-    void begin();
     bool isConnected();
     void update();
 

@@ -2,8 +2,8 @@
 #define CONFIG_H
 
 // Bluetooth credentials
-#define BLUETOOTH_NAME "ESP32_PS4_Controller"
-#define BLUETOOTH_PIN "1234"
+#define BLUETOOTH_NAME "ESP32_PS5_Controller"
+//#define BLUETOOTH_PIN "1234"
 
 // Pin definitions
 #define MOTOR_PIN 23  // Pin for motor control

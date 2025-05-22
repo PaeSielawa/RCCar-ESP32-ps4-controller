@@ -27,11 +27,6 @@ void CarController::setupPins() {
     }
 }
 
-void CarController::begin() {
-    ps5.begin();
-    Serial.println("PS5 Controller initialized");
-}
-
 bool CarController::isConnected() {
     return ps5.isConnected();
 }
@@ -63,12 +58,6 @@ void CarController::handleMotorInput() {
         motorPower = map(ps5.R2Value(), 0, 255, MOTOR_CENTER, MOTOR_MAX_FWD);
     } else if (ps5.L2()) {
         motorPower = map(ps5.L2Value(), 0, 255, MOTOR_CENTER, MOTOR_MAX_REV);
-    } else {
-        if (currentMotorAngle > MOTOR_CENTER) {
-            motorPower = currentMotorAngle - MOTOR_RETURN_SPEED;
-        } else if (currentMotorAngle < MOTOR_CENTER) {
-            motorPower = currentMotorAngle + MOTOR_RETURN_SPEED;
-        }
     }
     
     controlMotor(motorPower);
