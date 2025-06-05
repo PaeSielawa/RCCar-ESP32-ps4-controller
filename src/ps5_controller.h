@@ -14,15 +14,15 @@ public:
 
 private:
     bool steeringServoInitialized;
-    bool motorServoInitialized;
+    bool motorControllerInitialized;
     unsigned long lastDebugTime;
     const unsigned long DEBUG_INTERVAL = 100;
     
     Servo steeringServo;
-    Servo motorServo;
-    int currentMotorAngle;
+    Servo motorController;
+    int currentMotorValue;
     
-    void controlMotor(int angle);
+    void controlMotor(int value);
     void controlSteering(int angle);
     void handleSteeringInput();
     void handleMotorInput();

@@ -9,9 +9,9 @@
 #define MOTOR_PIN 23  // Pin for motor control
 #define SERVO_PIN 22  // Pin for servo control
 
-// Control parameters
-#define MOTOR_MIN_SPEED 0
-#define MOTOR_MAX_SPEED 255
+// Usunięte zbędne parametry
+// #define MOTOR_MIN_SPEED 0
+// #define MOTOR_MAX_SPEED 255
 
 // Servo parameters
 #define SERVO_CENTER 90      // Środkowa pozycja serwa
@@ -19,11 +19,13 @@
 #define SERVO_MAX_ANGLE 135  // Maksymalny skręt w prawo
 #define SERVO_DEADZONE 10    // Strefa martwa dla drążka
 
-// Motor servo parameters (temporary for testing)
-#define MOTOR_CENTER 90     // Pozycja neutralna
-#define MOTOR_MAX_FWD 135   // Maksymalne wychylenie do przodu
-#define MOTOR_MAX_REV 45    // Maksymalne wychylenie do tyłu
-#define MOTOR_RETURN_SPEED 2 // Prędkość powrotu do pozycji neutralnej
+// Motor servo parameters (for DC brushed motor)
+#define MOTOR_CENTER 90     // Pozycja neutralna (zatrzymanie)
+#define MOTOR_MAX_FWD 140   // Maksymalna prędkość do przodu
+#define MOTOR_MAX_REV 40    // Maksymalna prędkość do tyłu
+#define MOTOR_MIN_FWD 100   // Minimalna prędkość do przodu (aby pokonać tarcie)
+#define MOTOR_MIN_REV 80    // Minimalna prędkość do tyłu (aby pokonać tarcie)
+#define MOTOR_DEADZONE 10   // Strefa martwa dla triggerów
 
 // Other configuration constants
 #define MAX_CONNECTION_ATTEMPTS 5
@@ -33,8 +35,8 @@
 #define DEBUG_INTERVAL 100    // Interwał debugowania (ms)
 #define LOOP_DELAY 20        // Opóźnienie głównej pętli (ms)
 
-// Motor control parameters
-#define MOTOR_ACCELERATION 5  // Przyspieszenie silnika
-#define MOTOR_DECELERATION 3  // Opóźnienie silnika
+// Usunięte zbędne parametry
+// #define MOTOR_ACCELERATION 5  // Przyspieszenie silnika
+// #define MOTOR_DECELERATION 3  // Opóźnienie silnika
 
 #endif // CONFIG_H

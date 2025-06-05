@@ -3,8 +3,8 @@
 
 CarController::CarController() {
     steeringServoInitialized = false;
-    motorServoInitialized = false;
-    currentMotorAngle = MOTOR_CENTER;
+    motorControllerInitialized = false;
+    currentMotorValue = MOTOR_CENTER;
     lastDebugTime = 0;
 }
 
@@ -19,10 +19,10 @@ void CarController::setupPins() {
         Serial.println("Steering servo initialized");
     }
     
-    motorServo.setPeriodHertz(50);
-    if (motorServo.attach(MOTOR_PIN, 500, 2400)) {
-        motorServoInitialized = true;
-        motorServo.write(MOTOR_CENTER);
+    motorController.setPeriodHertz(50);
+    if (motorController.attach(MOTOR_PIN, 500, 2400)) {
+        motorControllerInitialized = true;
+        motorController.write(MOTOR_CENTER);
         Serial.println("Motor servo initialized");
     }
 }
@@ -32,7 +32,7 @@ bool CarController::isConnected() {
 }
 
 void CarController::update() {
-    if (!steeringServoInitialized || !motorServoInitialized) return;
+    if (!steeringServoInitialized || !motorControllerInitialized) return;
     
     if (ps5.isConnected()) {
         handleSteeringInput();
@@ -54,19 +54,36 @@ void CarController::handleSteeringInput() {
 void CarController::handleMotorInput() {
     int motorPower = MOTOR_CENTER;
     
+    // Jazda do przodu
     if (ps5.R2()) {
-        motorPower = map(ps5.R2Value(), 0, 255, MOTOR_CENTER, MOTOR_MAX_FWD);
-    } else if (ps5.L2()) {
-        motorPower = map(ps5.L2Value(), 0, 255, MOTOR_CENTER, MOTOR_MAX_REV);
+        int r2Value = ps5.R2Value();
+        if (r2Value < MOTOR_DEADZONE) {
+            // Ignorujemy delikatne naciśnięcia triggera
+            motorPower = MOTOR_CENTER;
+        } else {
+            // Mapujemy wartość triggera na zakres prędkości
+            motorPower = map(r2Value, MOTOR_DEADZONE, 255, MOTOR_MIN_FWD, MOTOR_MAX_FWD);
+        }
+    }
+    // Jazda do tyłu
+    else if (ps5.L2()) {
+        int l2Value = ps5.L2Value();
+        if (l2Value < MOTOR_DEADZONE) {
+            // Ignorujemy delikatne naciśnięcia triggera
+            motorPower = MOTOR_CENTER;
+        } else {
+            // Mapujemy wartość triggera na zakres prędkości
+            motorPower = map(l2Value, MOTOR_DEADZONE, 255, MOTOR_MIN_REV, MOTOR_MAX_REV);
+        }
     }
     
     controlMotor(motorPower);
 }
 
-void CarController::controlMotor(int angle) {
-    angle = constrain(angle, MOTOR_MAX_REV, MOTOR_MAX_FWD);
-    currentMotorAngle = angle;
-    motorServo.write(angle);
+void CarController::controlMotor(int value) {
+    value = constrain(value, MOTOR_MAX_REV, MOTOR_MAX_FWD);
+    currentMotorValue = value;
+    motorController.write(value);
 }
 
 void CarController::controlSteering(int angle) {
@@ -77,8 +94,16 @@ void CarController::controlSteering(int angle) {
 void CarController::debugOutput() {
     unsigned long currentTime = millis();
     if (currentTime - lastDebugTime >= DEBUG_INTERVAL) {
-        Serial.printf("Steering: %d | Motor: %d | R2: %d | L2: %d\n",
-            steeringServo.read(), currentMotorAngle, ps5.R2Value(), ps5.L2Value());
+        String direction = "STOP";
+        if (currentMotorValue > MOTOR_CENTER) direction = "FORWARD";
+        if (currentMotorValue < MOTOR_CENTER) direction = "REVERSE";
+        
+        int motorSpeed = abs(currentMotorValue - MOTOR_CENTER) * 100 / (MOTOR_MAX_FWD - MOTOR_CENTER);
+        
+        Serial.printf("Steering: %d | Motor: %d (%s %d%%) | R2: %d | L2: %d\n",
+            steeringServo.read(), currentMotorValue, 
+            direction.c_str(), motorSpeed,
+            ps5.R2Value(), ps5.L2Value());
         lastDebugTime = currentTime;
     }
 }
