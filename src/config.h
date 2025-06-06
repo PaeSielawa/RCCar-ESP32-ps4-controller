@@ -9,6 +9,10 @@
 #define MOTOR_PIN 23  // Pin for motor control
 #define SERVO_PIN 22  // Pin for servo control
 
+// MPU9250 pins - używane dla I2C
+#define SDA_PIN 18
+#define SCL_PIN 19
+
 // Usunięte zbędne parametry
 // #define MOTOR_MIN_SPEED 0
 // #define MOTOR_MAX_SPEED 255
