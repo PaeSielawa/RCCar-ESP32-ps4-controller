@@ -28,7 +28,7 @@ This project implements a remote control system using ESP32-WROOM-32 microcontro
 ## Installation
 1. Clone the repository
 ```bash
-git clone https://github.com/PaeSielawa/RCCar-ESP32-ps5-controller.git
+git clone https://github.com/PawelSiwiela/RCCar-ESP32-ps5-controller.git
 ```
 2. Open project in PlatformIO
 3. Configure pins in `config.h`:
