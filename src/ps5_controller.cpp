@@ -43,7 +43,10 @@ void CarController::update() {
 
 void CarController::handleSteeringInput() {
     int leftStickX = ps5.LStickX();
-    int steeringAngle = map(leftStickX, -127, 127, SERVO_MIN_ANGLE, SERVO_MAX_ANGLE);
+    
+    // Odwrócenie kierunku - teraz ujemne wartości (lewo) będą prawym skrętem
+    // a dodatnie wartości (prawo) będą lewym skrętem
+    int steeringAngle = map(leftStickX, -127, 127, SERVO_MAX_ANGLE, SERVO_MIN_ANGLE);
     
     if (abs(leftStickX) < SERVO_DEADZONE) {
         steeringAngle = SERVO_CENTER;
@@ -58,22 +61,37 @@ void CarController::handleMotorInput() {
     if (ps5.R2()) {
         int r2Value = ps5.R2Value();
         if (r2Value < MOTOR_DEADZONE) {
-            // Ignorujemy delikatne naciśnięcia triggera
             motorPower = MOTOR_CENTER;
         } else {
-            // Mapujemy wartość triggera na zakres prędkości
-            motorPower = map(r2Value, MOTOR_DEADZONE, 255, MOTOR_MIN_FWD, MOTOR_MAX_FWD);
+            // Początkowy skok mocy (20% maksymalnej mocy) już na starcie
+            float initialBoost = 0.5 * (MOTOR_MAX_FWD - MOTOR_CENTER);
+            float remainingPower = 0.5 * (MOTOR_MAX_FWD - MOTOR_CENTER);
+            
+            // Normalizacja wartości triggera
+            float normalizedInput = (float)(r2Value - MOTOR_DEADZONE) / (255.0f - MOTOR_DEADZONE);
+            
+            // Skok na początku + liniowy przyrost
+            motorPower = MOTOR_CENTER + initialBoost + (normalizedInput * remainingPower);
+            
+            motorPower = constrain(motorPower, MOTOR_CENTER, MOTOR_MAX_FWD);
         }
     }
-    // Jazda do tyłu
+    // Jazda do tyłu (podobna logika)
     else if (ps5.L2()) {
         int l2Value = ps5.L2Value();
         if (l2Value < MOTOR_DEADZONE) {
-            // Ignorujemy delikatne naciśnięcia triggera
             motorPower = MOTOR_CENTER;
         } else {
-            // Mapujemy wartość triggera na zakres prędkości
-            motorPower = map(l2Value, MOTOR_DEADZONE, 255, MOTOR_MIN_REV, MOTOR_MAX_REV);
+            // Początkowy skok mocy (20% maksymalnej mocy) już na starcie
+            float initialBoost = 0.2 * (MOTOR_CENTER - MOTOR_MAX_REV);
+            float remainingPower = 0.8 * (MOTOR_CENTER - MOTOR_MAX_REV);
+            
+            float normalizedInput = (float)(l2Value - MOTOR_DEADZONE) / (255.0f - MOTOR_DEADZONE);
+            
+            // Skok na początku + liniowy przyrost
+            motorPower = MOTOR_CENTER - initialBoost - (normalizedInput * remainingPower);
+            
+            motorPower = constrain(motorPower, MOTOR_MAX_REV, MOTOR_CENTER);
         }
     }
     

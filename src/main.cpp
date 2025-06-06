@@ -4,9 +4,17 @@
 #include "config.h"
 #include <driver/i2c.h>
 #include <Wire.h>
+#include "speed_sensor.h"
+#include "wifi_manager.h"
 
+// Pozostałe deklaracje zostają bez zmian
 CarController car;
 MPU9250Handler mpu;
+SpeedSensor speedSensor(SPEED_SENSOR_PIN, WHEEL_DIAMETER, PULSES_PER_REVOLUTION);
+WiFiManager wifiManager;
+
+// Dodaj tę linię - zmienna do śledzenia czasu ostatniego wysłania danych o prędkości
+unsigned long lastSpeedUpdateTime = 0;
 
 // Zamiana układu bajtów na string w formacie MAC
 const char* mac = "84:30:95:D8:A6:7B";
@@ -64,6 +72,35 @@ void scanI2CDevices() {
         Serial.print("Found ");
         Serial.print(deviceCount);
         Serial.println(" device(s).");
+    }
+}
+
+TaskHandle_t WiFiTask;
+TaskHandle_t ControlTask;
+
+// Funkcja zadania WiFi - będzie działać na rdzeniu 0
+void wifiTaskFunction(void * parameter) {
+    for(;;) {
+        if (millis() - lastSpeedUpdateTime >= 500) {
+            float speed = speedSensor.getSpeedKmh();
+            float distance = speedSensor.getDistanceMeters();
+            
+            // Wyślij dane do ESP32-CAM
+            wifiManager.sendSpeedData(speed, distance);
+            
+            lastSpeedUpdateTime = millis();
+        }
+        delay(100); // Daj czas innym zadaniom
+    }
+}
+
+// Funkcja zadania sterowania - będzie działać na rdzeniu 1
+void controlTaskFunction(void * parameter) {
+    for(;;) {
+        if (ps5.isConnected()) {
+            car.update(); // Obsługa silnika i serwa
+        }
+        delay(LOOP_DELAY);
     }
 }
 
@@ -129,27 +166,54 @@ void setup() {
     } else {
         Serial.println("Failed to connect PS5 controller!");
     }
+    
+    // Inicjalizacja czujnika prędkości
+    speedSensor.begin();
+    Serial.println("Speed sensor initialized");
+    
+    // Inicjalizacja WiFi
+    if (wifiManager.begin()) {
+        Serial.println("WiFi initialized successfully");
+    } else {
+        Serial.println("WiFi initialization failed");
+    }
+
+    // Stwórz zadania dla dwóch rdzeni
+    xTaskCreatePinnedToCore(
+        wifiTaskFunction,   /* Funkcja zadania */
+        "WiFiTask",         /* Nazwa zadania */
+        10000,              /* Rozmiar stosu */
+        NULL,               /* Parametry */
+        1,                  /* Priorytet */
+        &WiFiTask,          /* Uchwyt zadania */
+        0);                 /* Rdzeń (0) */
+        
+    xTaskCreatePinnedToCore(
+        controlTaskFunction, /* Funkcja zadania */
+        "ControlTask",       /* Nazwa zadania */
+        10000,               /* Rozmiar stosu */
+        NULL,                /* Parametry */
+        1,                   /* Priorytet */
+        &ControlTask,        /* Uchwyt zadania */
+        1);                  /* Rdzeń (1) */
 }
 
+// Uprość funkcję loop(), bo teraz zadania przejmują sterowanie
 void loop() {
-    static unsigned long lastLoopTime = 0;
+    // Tylko aktualizacja sensora prędkości (można też przenieść do zadania)
+    speedSensor.update();
+    
+    // Opcjonalny debugging (można przenieść do zadania)
     static unsigned long lastMpuDebugTime = 0;
     unsigned long currentTime = millis();
     
     #if MPU9250_ENABLED
-    // Aktualizacja danych z MPU9250
     mpu.update();
-    
-    // Wyświetlanie danych co sekundę
     if (currentTime - lastMpuDebugTime >= 1000) {
         mpu.printData();
         lastMpuDebugTime = currentTime;
     }
     #endif
     
-    // Aktualizacja kontrolera samochodu
-    if (currentTime - lastLoopTime >= LOOP_DELAY) {
-        car.update();
-        lastLoopTime = currentTime;
-    }
+    delay(10); // Zmniejsz obciążenie procesora
 }
