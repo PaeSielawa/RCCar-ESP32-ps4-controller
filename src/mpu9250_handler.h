@@ -3,19 +3,20 @@
 
 #include <Arduino.h>
 #include <Wire.h>
-#include "MPU9250.h"
+#include <MPU9250.h>
 
 class MPU9250Handler {
 public:
     MPU9250Handler();
-    bool begin(TwoWire &wirePort = Wire, uint8_t addr = 0x68);
+    ~MPU9250Handler(); // Destruktor do zwolnienia pamięci
+    bool begin(TwoWire& wirePort = Wire, uint8_t addr = 0x68);
     void update();
     void calibrate();
     
     // Gettery dla pomiarów
-    float getAccelX() { return accelX; }
-    float getAccelY() { return accelY; }
-    float getAccelZ() { return accelZ; }
+    float getAccX() { return accelX; }
+    float getAccY() { return accelY; }
+    float getAccZ() { return accelZ; }
     float getGyroX() { return gyroX; }
     float getGyroY() { return gyroY; }
     float getGyroZ() { return gyroZ; }
@@ -27,11 +28,9 @@ public:
     void printData();
 
 private:
-    // Zamiast bezpośredniej zmiennej użyjemy wskaźnika
-    MPU9250 *imu = nullptr;
+    MPU9250* imu;
     bool initialized;
     
-    // Wartości pomiarów
     float accelX, accelY, accelZ;
     float gyroX, gyroY, gyroZ;
     float magX, magY, magZ;

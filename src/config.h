@@ -1,6 +1,8 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+#define MPU9250_ENABLED false  // Zmień na false aby wyłączyć obsługę MPU9250
+
 // Bluetooth credentials
 #define BLUETOOTH_NAME "ESP32_PS5_Controller"
 //#define BLUETOOTH_PIN "1234"
