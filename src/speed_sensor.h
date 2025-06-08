@@ -7,11 +7,13 @@ class SpeedSensor {
 public:
     SpeedSensor(int pin, float wheelDiameter = 0.065, int pulsesPerRevolution = 20);
     void begin();
-    float getSpeedKmh();
-    float getSpeedMps();  // metry na sekundę
-    float getDistanceMeters();
     void update();
-    
+    float getSpeedMps();
+    float getSpeedKmh();
+    float getDistanceMeters();
+    unsigned long getLastPulseTime();
+    unsigned long getPulseCount();
+
 private:
     static void IRAM_ATTR pulseCounter();
     
