@@ -27,11 +27,11 @@
 
 // Motor servo parameters (for DC brushed motor)
 #define MOTOR_CENTER 90     // Pozycja neutralna (zatrzymanie) - nie zmieniamy
-#define MOTOR_MAX_FWD 110    // Maksymalna prędkość do przodu (około 30% oryginalnej mocy)
+#define MOTOR_MAX_FWD 115    // Maksymalna prędkość do przodu (około 30% oryginalnej mocy)
 #define MOTOR_MAX_REV 70    // Maksymalna prędkość do tyłu (około 30% oryginalnej mocy)
 #define MOTOR_MIN_FWD 93    // Minimalna prędkość do przodu (jeszcze mniejsza)
 #define MOTOR_MIN_REV 87    // Minimalna prędkość do tyłu (jeszcze mniejsza)
-#define MOTOR_DEADZONE 1    // Zmniejszona strefa martwa dla większej czułości
+#define MOTOR_DEADZONE 10    // Zmniejszona strefa martwa dla większej czułości
 
 // Other configuration constants
 #define MAX_CONNECTION_ATTEMPTS 5
